@@ -85,13 +85,9 @@ public class Main {
 			listOfAllDocumentsTokenized.add(tokenizedText);
 			listOfMovieTitles.add(pairs.getKey());
 		}
-		System.out.println("Documents tokenized size");
+	
 		m.setListOfAllDocuments(listOfAllDocumentsTokenized);
-		System.out
-				.println("TAKEN ALL OF THE DOCUMENTS!! LIST SET IN MeasuerTFIDF object!");
-
-		// int j = 1;
-
+	
 		Iterator descIt1 = descriptions.entrySet().iterator();
 		while (descIt1.hasNext()) {
 			Map.Entry<String, String> pairs = (Map.Entry<String, String>) descIt1
@@ -104,7 +100,7 @@ public class Main {
 					.generateDescriptionVector(tokenizedText);
 
 			m.writeVectorToFile(map, pairs.getKey());
-			// j++;
+			
 
 		}
 
@@ -112,11 +108,7 @@ public class Main {
 
 		RealMatrix matrix = MatrixGenerator.getInstance().generateMatrix(
 				"vectors");
-		System.out.println("Original matrix: ");
-		for (int i = 0; i < matrix.getRowDimension(); i++) {
-			System.out.println(Arrays.toString(matrix.getRow(i)));
-		}
-
+		
 		// STEP 5 Calculate SVD for the matrix generated in STEP 4
 		// and reduce the S matrix to recalculate the matrix for cosine
 		// similarity, depending on the number of documents, set the dimension
@@ -127,9 +119,7 @@ public class Main {
 
 
 		// STEP 6 Calculate cosine similarity and write to individual .csv files
-		System.out.println("Calculating cosine similarity!");
 		CosineSimilarity.getInstance().calculateCosineSimilarity(matrixNew,
 				listOfMovieTitles);
-		System.out.println("Process completed!");
 	}
 }
