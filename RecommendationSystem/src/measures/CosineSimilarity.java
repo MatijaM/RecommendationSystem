@@ -38,8 +38,6 @@ public class CosineSimilarity {
 				if (j != i) {
 					double cosine = currentVector.cosine(m.getRowVector(j));
 					cosineValues.put(movieTitles.get(j), cosine);
-					System.out.println("The title: " + movieTitles.get(j)
-							+ " and cosine is: " + cosine);
 				}
 			}
 			writeTreeMapToFile(cosineValues, title);

@@ -20,7 +20,6 @@ import com.hp.hpl.jena.tdb.store.Hash;
 
 import opennlp.tools.util.InvalidFormatException;
 
-import tokenization.SenteceSplitter;
 import tokenization.TextTokenization;
 
 public class MeasureTFIDF {
@@ -66,18 +65,11 @@ public class MeasureTFIDF {
 			List<String> movieDescription) throws InvalidFormatException,
 			IOException {
 
-		/*
-		 * List<List<String>> listOfAllDocuments =
-		 * TextTokenization.getInstance() .getAllDocuments("moviesTraining10");
-		 */
 		numberOfDocuments = listOfAllDocuments.size();
 		listOfUniqueTokens = TextTokenization.getInstance().filterList(
 				movieDescription);
 		occurencies = calculateOccurenciesInDocument(movieDescription,
 				listOfUniqueTokens);
-		// totalNumberOfTokens =
-		// calculateTotalNumberOfTokens(listOfAllDocuments);
-		// totalNumberOfTokens = calculateTotalNumberOfTokens(movieDescription);
 		totalNumberOfTokens = movieDescription.size();
 		tfs = calculateTFSForUniqueTokens(listOfUniqueTokens,
 				totalNumberOfTokens);
@@ -97,7 +89,6 @@ public class MeasureTFIDF {
 			for (int i = 0; i < string.length; i++) {
 				if (!listOfUniqueTokens.contains(string[i])) {
 					listOfUniqueTokens.add(string[i]);
-					// System.out.println(string[i]);
 				}
 			}
 		}
@@ -120,14 +111,6 @@ public class MeasureTFIDF {
 					map.put(uniqueToken, currentNumber);
 				}
 			}
-
-			/*
-			 * for (int i = 0; i < vector.length; i++) { //
-			 * System.out.println(vector[i]); if (vector[i].equals(uniqueToken))
-			 * { int currentNumber = map.get(uniqueToken); currentNumber++;
-			 * map.put(uniqueToken, currentNumber); } }
-			 */
-
 		}
 
 		return map;
@@ -152,8 +135,6 @@ public class MeasureTFIDF {
 			double occ = occurencies.get(string);
 			double tf = occ / sumOfTokens;
 			map.put(string, tf);
-			// System.out.println(string + " : " + occurencies.get(string));
-			// System.out.println("The tf for " + string + " is " + tf);
 		}
 
 		return map;
@@ -165,8 +146,6 @@ public class MeasureTFIDF {
 			List<String> unique, List<List<String>> documents)
 			throws InvalidFormatException, IOException {
 
-		// TextTokenization ttokenization = TextTokenization.getInstance();
-
 		HashMap<String, Integer> map = new HashMap<>();
 
 		for (String uniqueToken : unique) {
@@ -177,9 +156,6 @@ public class MeasureTFIDF {
 						int occ = map.get(uniqueToken);
 						occ++;
 						map.put(uniqueToken, occ); //
-						// System.out.println("Found " + uniqueToken + " in " +
-						// i
-						// + " document.");
 						break primaryLoop;
 					}
 				}
@@ -190,8 +166,6 @@ public class MeasureTFIDF {
 
 	}
 
-	// napraviti matricu od svih plotova, stop words (CoreNlp), izracunati SVD
-
 	// calculate the TF-IDFs for each unique token and generate vector
 	public HashMap<String, Double> calculateTFIDFs(List<String> unique,
 			HashMap<String, Integer> docOcc, int docNum,
@@ -199,8 +173,6 @@ public class MeasureTFIDF {
 		HashMap<String, Double> map = new HashMap<>();
 
 		for (String uniqueToken : unique) {
-			// System.out.println(uniqueToken + " is in "
-			// + docOcc.get(uniqueToken) + " documents.");
 			int docOccurencie = docOcc.get(uniqueToken);
 			double num = docNum / 1 + docOccurencie;
 			double idf = Math.log(num) / Math.log(2);
@@ -208,12 +180,6 @@ public class MeasureTFIDF {
 			double tf = termFrequencies.get(uniqueToken);
 			double tfidf = tf * idf;
 			map.put(uniqueToken, tfidf);
-			/*
-			 * System.out.println("The tf for " + uniqueToken + " is " + tf);
-			 * System.out.println("The idf for " + uniqueToken + " is " + idf);
-			 * System.out .println("The TF-IDF for " + uniqueToken + " is " +
-			 * tfidf);
-			 */
 		}
 
 		return map;
@@ -223,10 +189,6 @@ public class MeasureTFIDF {
 			String fileName) throws IOException {
 		csvWriter = new CSVWriter(new FileWriter("data/vectors/" + fileName
 				+ ".csv"));
-		/*
-		 * String[] firstRow = new String[] { "Token", "TF-IDF" };
-		 * csvWriter.writeNext(firstRow);
-		 */
 
 		Iterator it = vector.entrySet().iterator();
 		while (it.hasNext()) {

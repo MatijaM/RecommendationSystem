@@ -37,10 +37,7 @@ public class TextTokenization {
 			"with");
 
 	private TextTokenization() throws InvalidFormatException, IOException {
-		/*
-		 * modelIn = new FileInputStream("data/en-token.bin"); model = new
-		 * TokenizerModel(modelIn); tokenizer = new TokenizerME(model);
-		 */
+
 		pipeline = generatePipeline();
 	}
 
@@ -63,14 +60,11 @@ public class TextTokenization {
 
 		List<String> tempTokenList = new ArrayList<>();
 		List<String> tokenList = new ArrayList<>();
-		List<String> filteredTokenList = new ArrayList<>();
 
 		Annotation document = new Annotation(text);
 		pipeline.annotate(document);
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 
-		//
-		// String punctuations = ". , ! ? ( ) # @ $ % ^ & | * \" : ; ` `` ";
 		List<String> punctuations = new ArrayList<>();
 		punctuations.add(".");
 		punctuations.add(",");
@@ -104,25 +98,15 @@ public class TextTokenization {
 			// traversing the words in the current sentence
 			// a CoreLabel is a CoreMap with additional token-specific methods
 			for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
-				// this is the text of the token
-				// String word = token.get(TextAnnotation.class);
-				// System.out.println("Value of word: " + word);
-				// this is the POS tag of the token
-				// String pos = token.get(PartOfSpeechAnnotation.class);
-
-				// this is the NER label of the token
-				// String ne = token.get(NamedEntityTagAnnotation.class);
 
 				String lema = token.getString(LemmaAnnotation.class);
 				if (!punctuations.contains(lema) && !lema.matches(numberRegex)
 						&& !stopwordList.contains(lema.toLowerCase())) {
-					// System.out.println("Lema is: " + lema);
 					tempTokenList.add(lema);
 				}
 			}
 		}
 
-		System.out.println("Temp token list size: " + tempTokenList.size());
 		// concatenate tokens that should be possesive(John + 's)
 		String regex = "^'[a-zA-Z]$";
 		String regex1 = "^'ll$";
@@ -133,7 +117,6 @@ public class TextTokenization {
 						.get(j).matches(regex1))
 						&& (tempTokenList.get(j + 1).matches(regex) || tempTokenList
 								.get(j + 1).matches(regex1))) {
-					System.out.println("Nasao: " + tempTokenList.get(j + 1));
 					tokenList.add(tempTokenList.get(j)
 							+ tempTokenList.get(j + 1));
 				} else {
@@ -168,7 +151,8 @@ public class TextTokenization {
 				+ fileName + ".txt"));
 		String line;
 
-		while ((line = br.readLine()) != null) { // process the line.
+		while ((line = br.readLine()) != null) {
+			// process the line.
 			listOfDocumentTokens.add(tokenizeText(line));
 		}
 

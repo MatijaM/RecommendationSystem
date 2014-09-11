@@ -41,20 +41,11 @@ public class MatrixGenerator {
 	}
 
 	public RealMatrix generateMatrix(String dirName) throws IOException {
-		// list of all unique tokens from all vectors the first row of the
-		// matrix
+
 		List<TreeMap<String, Double>> listOfVectors = readVectorsFromDirectory("data/"
 				+ dirName);
 
-		// these are actually the future rows for the matrix that have all
-		// unique tokens
-		// but values for only the ones that exist in a certain description
-		List<HashMap<String, Double>> listOfCompleteVectors = new ArrayList<>();
-
 		List<String> listOfAllUniqueTokens = generateListOfUniqueTokens(listOfVectors);
-
-		System.out
-				.println("UNIQUE TOKEN SIZE: " + listOfAllUniqueTokens.size());
 
 		matrix = new BlockRealMatrix(listOfVectors.size(),
 				listOfAllUniqueTokens.size());
@@ -72,8 +63,6 @@ public class MatrixGenerator {
 		while (it2.hasNext()) {
 			Map.Entry<String, Double> pairs = (Map.Entry<String, Double>) it2
 					.next();
-			// System.out.println("Key: " + pairs.getKey() + " Value: " +
-			// pairs.getValue());
 			firstRow[m] = pairs.getKey();
 			m++;
 		}
@@ -87,7 +76,6 @@ public class MatrixGenerator {
 
 		for (TreeMap<String, Double> hashMap : listOfVectors) {
 			TreeMap<String, Double> tempHashMap = generateTempHashMap(listOfAllUniqueTokens);
-			// List<Double> tempListOfValues = new ArrayList<>();
 			double[] matrixRow = new double[tempHashMap.size()];
 			String[] row = new String[tempHashMap.size() + 1];
 			row[0] = "Desc_" + t;
@@ -97,7 +85,6 @@ public class MatrixGenerator {
 				if (hashMap.containsKey(token)) {
 					tempHashMap.put(token, hashMap.get(token));
 				}
-
 			}
 
 			int j = 1;
@@ -105,8 +92,7 @@ public class MatrixGenerator {
 			while (it.hasNext()) {
 				Map.Entry<String, Double> pairs = (Map.Entry<String, Double>) it
 						.next();
-				// System.out.println("Key: " + pairs.getKey() + " Value: " +
-				// pairs.getValue());
+
 				matrixRow[j - 1] = pairs.getValue();
 				row[j] = pairs.getValue().toString();
 				j++;
@@ -121,15 +107,14 @@ public class MatrixGenerator {
 		return matrix;
 	}
 
-	// generate a HashMap for provided keys where the values are 0.0
+	// generate a TreeMap for provided keys where the values for the keys are
+	// 0.0
 	public TreeMap<String, Double> generateTempHashMap(List<String> listOfKeys) {
 		TreeMap<String, Double> tempMap = new TreeMap<>();
 
 		for (String string : listOfKeys) {
 			tempMap.put(string, 0.0);
 		}
-
-		// System.out.println("TempMap before return: ");
 
 		return tempMap;
 	}
@@ -154,9 +139,8 @@ public class MatrixGenerator {
 			List<TreeMap<String, Double>> listOfVectors) {
 		List<String> tempList = new ArrayList<>();
 
-		for (TreeMap<String, Double> hashMap : listOfVectors) {
-			// System.out.println("Size of map is: " + hashMap.size());
-			Iterator it = hashMap.entrySet().iterator();
+		for (TreeMap<String, Double> treeMap : listOfVectors) {
+			Iterator it = treeMap.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<String, Double> pairs = (Map.Entry<String, Double>) it
 						.next();
@@ -171,7 +155,7 @@ public class MatrixGenerator {
 
 	}
 
-	// read all .csv files/vectors to a list of HashMaps
+	// read all .csv files/vectors to a list of TreeMaps
 	public List<TreeMap<String, Double>> readVectorsFromDirectory(
 			String pathName) {
 		List<TreeMap<String, Double>> tempList = new ArrayList<>();
@@ -179,8 +163,6 @@ public class MatrixGenerator {
 		File f = new File(pathName);
 		if (f.isDirectory()) {
 			files = f.listFiles();
-
-			// for (File file : files) {
 			for (int i = 0; i < files.length; i++) {
 				try {
 					tempList.add(readVectorFromFile(pathName + "/"
@@ -195,8 +177,7 @@ public class MatrixGenerator {
 		return tempList;
 	}
 
-	// reduce the SVD calculated matrices and recalculate
-
+	// reduce the SVD calculated matrices and recalculate the given matrix
 	public RealMatrix reduceSVDMatrix(RealMatrix originalMatrix, int dimensions) {
 		SingularValueDecomposition svd = new SingularValueDecomposition(
 				originalMatrix);
