@@ -1,11 +1,11 @@
 #About
 
-Goal of this app is to generate data that could be used in comparison of movies based on their plots. It is developed using the following paper as a rolemodel: [A Non-Intrusive Movie Recommendation System](http://www.dbgroup.unimo.it/paper/odbase2012.pdf)
+The goal of this app is to enable the computation of similarity of movies based on their plots. It is developed using the following research paper as a role model: [Tania Farinella, Sonia Bergamaschi, Laura Po: A Non-intrusive Movie Recommendation System. OTM Conferences (2) 2012: 736-751](http://www.dbgroup.unimo.it/paper/odbase2012.pdf)
 
-The complete application workflow is divised into 6 steps:
+The complete application workflow consists of 6 major steps:
 
-1. Data collection from a TDB storage and saving it to local storage
-2. Read the data from the local storage and create vectors of tokenized movie plots to be used in step 3 
+1. Collecting movie data (movie URI, title and plot) from an RDF triplestore and saving the data to a local storage
+2. Reading the data from the local storage and creating vectors of tokenized movie plots to be used in step 3; movie plots are also "cleaned" 
 3. Generate [TF-IDF](http://en.wikipedia.org/wiki/Tf%E2%80%93idf) vectors
 4. Use vectors from step 3 to generate a matrix on which [SVD](http://en.wikipedia.org/wiki/Singular_value_decomposition) will be performed
 5. Perform SVD and recalculate the matrix
